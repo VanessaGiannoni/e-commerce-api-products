@@ -1,11 +1,10 @@
-package br.senac.dev.web.api.product.categoria;
+package br.senac.devweb.api.products.categoria;
 
 import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -17,14 +16,14 @@ public class Categoria {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private UUID id;
+    private Long id;
 
-    @NotNull(message = "O campo descrição não pode ser nulo.")
-    @Column(name = "DESCRICAO")
-    @Size(max = 30, min = 1, message = "A descrição deve conter entre 1 a 30 caracteres.")
+    @NotNull(message = "O campo descrição não pode ser nulo!")
+    @Column(name =  "DESCRICAO")
+    @Size(max = 30, min = 1, message = "A descrição deve conter de 1 a 30 caracteres!")
     private String descricao;
 
-    @NotNull(message = "O campo status não pode ser nulo.")
+    @NotNull(message = "O campo status não pode ser nulo")
     @Column(name = "STATUS")
     private Status status;
 

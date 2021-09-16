@@ -1,4 +1,4 @@
-package br.senac.dev.web.api.product;
+package br.senac.devweb.api.products;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

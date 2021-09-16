@@ -1,4 +1,4 @@
-package br.senac.dev.web.api.product.categoria;
+package br.senac.devweb.api.products.categoria;
 
 import lombok.Builder;
 import lombok.Data;
@@ -7,16 +7,14 @@ import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.UUID;
 
 public interface CategoriaRepresentation {
-
     @Data
     @Getter
     @Setter
     class CreateCategoria {
-        @NotNull(message = "O campo descrição não pode ser nulo.")
-        @Size(max = 30, min = 1, message = "A descrição deve conter entre 1 a 30 caracteres.")
+        @NotNull(message = "O campo descrição não pode ser nulo!")
+        @Size(max = 30, min = 1, message = "A descrição deve conter de 1 a 30 caracteres!")
         private String descricao;
     }
 
@@ -25,11 +23,11 @@ public interface CategoriaRepresentation {
     @Setter
     @Builder
     class Detail {
-        private UUID id;
+        private Long id;
         private String descricao;
         private Categoria.Status status;
 
-        public static Detail from (Categoria categoria) {
+        public static Detail from(Categoria categoria) {
             return Detail.builder()
                     .id(categoria.getId())
                     .descricao(categoria.getDescricao())
