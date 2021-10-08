@@ -13,7 +13,7 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class ProdutoService {
-    private final ProdutoRespoitory produtoRepository;
+    private final ProdutoRepository produtoRepository;
 
     public Produto save(ProdutoRepresentation.RepresentationProduto repProduto, Categoria categoria) {
 
