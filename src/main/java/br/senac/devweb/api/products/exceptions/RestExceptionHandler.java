@@ -42,4 +42,18 @@ public class RestExceptionHandler {
                 .path(request.getContextPath() + request.getServletPath())
                 .build();
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorPayload handleIllegalArgumentException(IllegalArgumentException exception, HttpServletRequest request) {
+        return ErrorPayload
+                .builder()
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.BAD_REQUEST.value())
+                .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
+                .message(exception.getLocalizedMessage())
+                .path(request.getContextPath() + request.getServletPath())
+                .build();
+    }
 }
