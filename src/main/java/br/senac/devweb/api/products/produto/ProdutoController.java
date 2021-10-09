@@ -2,19 +2,20 @@ package br.senac.devweb.api.products.produto;
 
 import br.senac.devweb.api.products.categoria.Categoria;
 import br.senac.devweb.api.products.categoria.CategoriaService;
-import br.senac.devweb.api.products.categoria.QCategoria;
 import br.senac.devweb.api.products.util.Pagination;
+import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import lombok.AllArgsConstructor;
-import org.apache.logging.log4j.util.Strings;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.querydsl.binding.QuerydslPredicate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/produto")
@@ -59,14 +60,14 @@ public class ProdutoController {
 
     @GetMapping("/")
     public ResponseEntity<Pagination> readProdutos(
-            @RequestParam(name = "filter", required = false, defaultValue = "") String filter,
+            @QuerydslPredicate(root = Produto.class) Predicate filters,
             @Valid @RequestParam(name = "selectedPage", required = false, defaultValue = "1") Integer selectedPage,
             @RequestParam(name = "pageSizer", required = false, defaultValue = "20") Integer pageSize
 
     ) {
-        BooleanExpression filters = Strings.isEmpty(filter) ?
+        BooleanExpression filter = Objects.isNull(filters) ?
                 QProduto.produto.status.eq(Produto.Status.ATIVO) :
-                QProduto.produto.status.eq(Produto.Status.ATIVO).and(QCategoria.categoria.descricao.containsIgnoreCase(filter));
+                QProduto.produto.status.eq(Produto.Status.ATIVO).and(filters);
 
         if (selectedPage <= 0) {
             throw new IllegalArgumentException("O número da página não pode ser 0 ou menor que 0");
@@ -74,7 +75,7 @@ public class ProdutoController {
 
         Pageable pageRequest = PageRequest.of(selectedPage-1, pageSize);
 
-        Page<Produto> produtoPage = this.produtoRepository.findAll(filters, pageRequest);
+        Page<Produto> produtoPage = this.produtoRepository.findAll(filter, pageRequest);
 
         Pagination pagination = Pagination
                 .builder()
