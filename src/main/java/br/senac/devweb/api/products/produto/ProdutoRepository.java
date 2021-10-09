@@ -1,6 +1,5 @@
 package br.senac.devweb.api.products.produto;
 
-import br.senac.devweb.api.products.categoria.QCategoria;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.StringExpression;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
