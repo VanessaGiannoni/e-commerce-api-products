@@ -1,17 +1,19 @@
 package br.senac.devweb.api.products.categoria;
 
 import br.senac.devweb.api.products.util.Pagination;
+import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import lombok.AllArgsConstructor;
-import org.apache.logging.log4j.util.Strings;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.querydsl.binding.QuerydslPredicate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/categoria")
@@ -44,21 +46,21 @@ public class CategoriaController {
 
     @GetMapping("/")
     public ResponseEntity<Pagination> readCategorias(
-            @RequestParam(name = "filter", required = false, defaultValue = "") String filter,
+            @QuerydslPredicate(root = Categoria.class) Predicate filters,
             @Valid @RequestParam(name = "selectedPage", required = false, defaultValue = "1") Integer selectedPage,
             @RequestParam(name = "pageSize", required = false, defaultValue = "20") Integer pageSize
     ) {
-        BooleanExpression filters = Strings.isEmpty(filter) ?
+        BooleanExpression filter = Objects.isNull(filters) ?
                 QCategoria.categoria.status.eq(Categoria.Status.ATIVO) :
-                QCategoria.categoria.status.eq(Categoria.Status.ATIVO)
-                        .and(QCategoria.categoria.descricao.containsIgnoreCase(filter));
+                QCategoria.categoria.status.eq(Categoria.Status.ATIVO).and(filters);
+
         if (selectedPage <= 0) {
             throw new IllegalArgumentException("O número da página não pode ser 0 ou menor que 0");
         }
 
         Pageable pageRequest = PageRequest.of(selectedPage-1, pageSize);
 
-        Page<Categoria> categoriaPage = this.categoriaRepository.findAll(filters, pageRequest);
+        Page<Categoria> categoriaPage = this.categoriaRepository.findAll(filter, pageRequest);
 
         Pagination pagination = Pagination
                 .builder()
